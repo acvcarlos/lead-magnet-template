@@ -1,0 +1,1624 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Datos</title>
+
+    <!-- Bootstrap 5 & FontAwesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-color: #0F172A;
+            --accent-color: #F59E0B;
+            --card-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            --border-radius: 16px;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #e8ecf1;
+            min-height: 100vh;
+            padding: 20px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .main-container {
+            background: #FFFFFF;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            max-width: 1000px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 100%);
+            color: white;
+            padding: 20px 25px;
+            text-align: center;
+            border-bottom: 4px solid var(--accent-color);
+            flex-shrink: 0;
+        }
+
+        .header h2 { font-size: 1.6rem; font-weight: 800; margin: 0; }
+        .header p { color: #94A3B8; font-size: 0.85rem; margin: 2px 0 0; }
+        
+        .row-contenido {
+            display: flex;
+            flex: 1;
+            min-height: 500px;
+        }
+
+        /* ===== COLUMNA IZQUIERDA ===== */
+        .col-izquierda {
+            flex: 0 0 70%;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #e8e8e8;
+            height: auto;
+            min-height: 100%;
+        }
+
+        .col-izquierda .scroll-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 20px 0 20px;
+            min-height: 0;
+        }
+
+        .col-izquierda .scroll-area::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .col-izquierda .scroll-area::-webkit-scrollbar-track {
+            background: #f0f0f0;
+            border-radius: 10px;
+        }
+
+        .col-izquierda .scroll-area::-webkit-scrollbar-thumb {
+            background: #D1D5DB;
+            border-radius: 10px;
+        }
+
+        .col-izquierda .scroll-area::-webkit-scrollbar-thumb:hover {
+            background: #9CA3AF;
+        }
+
+        .col-izquierda .form-contenido {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            min-height: 100%;
+        }
+
+        .col-izquierda .form-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 4px;
+            min-height: 0;
+        }
+
+        .col-izquierda .form-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .col-izquierda .form-scroll::-webkit-scrollbar-track {
+            background: #f0f0f0;
+            border-radius: 10px;
+        }
+
+        .col-izquierda .form-scroll::-webkit-scrollbar-thumb {
+            background: #D1D5DB;
+            border-radius: 10px;
+        }
+
+        .col-izquierda .form-scroll::-webkit-scrollbar-thumb:hover {
+            background: #9CA3AF;
+        }
+
+        /* ===== FOOTER EN LA COLUMNA IZQUIERDA - SIEMPRE AL FINAL ===== */
+        .footer-columna-izquierda {
+            flex-shrink: 0;
+            padding: 10px 20px 15px 20px;
+            text-align: center;
+            border-top: 1px solid #E5E7EB;
+            background: #f8fafc;
+            margin-top: auto;
+        }
+
+        .footer-columna-izquierda .separador {
+            width: 200px;
+            height: 1px;
+            background: #D1D5DB;
+            margin: 0 auto 10px auto;
+        }
+
+        .footer-columna-izquierda a {
+            color: #1E3A8A;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: color 0.2s;
+        }
+
+        .footer-columna-izquierda a:hover {
+            color: #0055a5;
+            text-decoration: underline;
+        }
+
+        .footer-columna-izquierda i {
+            color: #25D366;
+            margin-right: 6px;
+        }
+
+        /* ===== COLUMNA DERECHA ===== */
+        .col-derecha {
+            flex: 0 0 30%;
+            display: flex;
+            flex-direction: column;
+            height: auto;
+            min-height: 100%;
+        }
+        
+        .dynamic-row { background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 12px 105px 12px 12px; margin-bottom: 10px; position: relative; }
+        .dynamic-row-nota { background: #F0F7FF; border: 1px dashed #93C5FD; border-radius: 10px; padding: 8px 105px 8px 12px; margin-bottom: 10px; position: relative; }
+        
+        .right-panel-container { display: flex; flex-direction: column; height: 100%; }
+        .promo-box-area { padding: 15px; background: #FFFFFF; border-bottom: 2px solid #E2E8F0; flex-shrink: 0; }
+        .instructions-scroll-area { flex: 1; overflow-y: auto; padding: 15px; background: #F8FAFC; }
+
+        .promo-box-card {
+            background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 100%);
+            border: 2px solid var(--accent-color);
+            border-radius: 14px; padding: 14px; width: 100%; text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .promo-box-badge { background: var(--accent-color); color: #0F172A; font-size: 0.65rem; font-weight: 800; padding: 3px 10px; border-radius: 20px; display: inline-block; text-transform: uppercase; }
+        .promo-box-title { font-size: 0.95rem; font-weight: 800; color: #FCD34D; margin-top: 6px; }
+        .promo-box-desc { font-size: 0.75rem; color: #E0E7FF; margin: 4px 0 8px; line-height: 1.3; }
+        .promo-box-btn { background: linear-gradient(135deg, var(--accent-color), #D97706); color: #0F172A; font-size: 0.75rem; font-weight: 800; padding: 6px 16px; border-radius: 30px; text-decoration: none; display: inline-block; }
+
+        .secure-data-box {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+        }
+        .data-table { width: 100%; margin-top: 15px; table-layout: auto; }
+        .data-table th { background: #0F172A; color: white; padding: 10px; font-size: 0.85rem; }
+        .data-table td { padding: 10px; font-size: 0.85rem; border-bottom: 1px solid #e2e8f0; vertical-align: middle; word-wrap: break-word; }
+        .data-table .fila-nota td { border-bottom: none; padding-bottom: 2px; }
+        .data-table .nota-texto td { padding-top: 2px; padding-bottom: 12px; border-bottom: 1px solid #e2e8f0; }
+        .data-table .nota-texto td div { 
+            background: #F0F7FF; 
+            padding: 8px 12px; 
+            border-radius: 6px; 
+            border-left: 3px solid #3B82F6;
+            font-style: italic;
+            color: #1E40AF;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+
+        .pin-badge {
+            background: #F59E0B;
+            color: #0F172A;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        /* Notificación flotante */
+        .toast-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #0F172A;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 9999;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.3s, transform 0.3s;
+            pointer-events: none;
+        }
+        .toast-notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .toast-notification i { margin-right: 10px; }
+
+        /* Botón Actualizar desactivado */
+        .btn-actualizar-desactivado {
+            background-color: #6c757d !important;
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+
+        /* Botón Agregar Fila - Azul oscuro */
+        .btn-agregar-fila {
+            background-color: #1E3A8A;
+            color: white;
+            border: none;
+        }
+        .btn-agregar-fila:hover {
+            background-color: #1E40AF;
+            color: white;
+        }
+
+        /* Botón Agregar Nota - Verde */
+        .btn-agregar-nota {
+            background-color: #059669;
+            color: white;
+            border: none;
+        }
+        .btn-agregar-nota:hover {
+            background-color: #047857;
+            color: white;
+        }
+
+        /* Botones pequeños */
+        .btn-pequeno {
+            padding: 6px 20px;
+            font-size: 0.85rem;
+            width: auto;
+            display: inline-block;
+        }
+
+        /* Botón Descargar - Mediano */
+        .btn-descargar {
+            padding: 8px 30px;
+            font-size: 0.95rem;
+            width: auto;
+            display: inline-block;
+        }
+
+        /* Botón Editar Archivo - Fondo gris claro */
+        .btn-editar-archivo {
+            background-color: #F3F4F6;
+            border: 1px solid #D1D5DB;
+            color: #1F2937;
+        }
+        .btn-editar-archivo:hover {
+            background-color: #E5E7EB;
+            border-color: #9CA3AF;
+            color: #1F2937;
+        }
+
+        /* Botón Tutorial - Estilo gris con ícono rojo */
+        .btn-tutorial {
+            background-color: #F3F4F6;
+            border: 1px solid #D1D5DB;
+            color: #1F2937;
+            padding: 4px 10px;
+            font-size: 0.9rem;
+            border-radius: 6px;
+            transition: all 0.2s;
+            line-height: 1.4;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .btn-tutorial:hover {
+            background-color: #E5E7EB;
+            border-color: #9CA3AF;
+            color: #1F2937;
+            text-decoration: none;
+        }
+        .btn-tutorial i {
+            font-size: 1rem;
+            color: #FF0000;
+        }
+
+        /* Botones Deshacer/Rehacer */
+        .btn-undo-redo {
+            background: transparent;
+            border: 1px solid #D1D5DB;
+            color: #4B5563;
+            padding: 4px 10px;
+            font-size: 0.9rem;
+            border-radius: 6px;
+            transition: all 0.2s;
+            line-height: 1.4;
+        }
+        .btn-undo-redo:hover:not(:disabled) {
+            background: #E5E7EB;
+            border-color: #9CA3AF;
+            color: #1F2937;
+        }
+        .btn-undo-redo:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        .btn-undo-redo i {
+            font-size: 1rem;
+        }
+
+        /* Contenedor centrado para botones */
+        .botones-centrados {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nota-label {
+            color: #059669;
+            font-weight: 600;
+        }
+
+        /* Botones de movimiento */
+        .acciones-mover {
+            position: absolute;
+            right: 35px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .btn-mover {
+            padding: 2px 8px;
+            font-size: 0.7rem;
+            line-height: 1;
+            border-radius: 4px;
+            background: transparent;
+            border: 1px solid #D1D5DB;
+            color: #4B5563;
+            transition: all 0.2s;
+            width: 24px;
+            text-align: center;
+        }
+        .btn-mover:hover {
+            background: #E5E7EB;
+            border-color: #9CA3AF;
+            color: #1F2937;
+        }
+        .btn-mover:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* Botón cerrar */
+        .btn-cerrar {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.75rem;
+            background: transparent;
+            border: none;
+            color: #6B7280;
+            padding: 4px 8px;
+            z-index: 2;
+        }
+        .btn-cerrar:hover {
+            color: #DC2626;
+        }
+
+        .dynamic-row-nota .acciones-mover,
+        .dynamic-row-nota .btn-cerrar {
+            top: 50%;
+        }
+
+        /* Encabezado del editor */
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-shrink: 0;
+        }
+        .editor-header-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .editor-header-left h5 {
+            margin: 0;
+        }
+        .editor-header-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ===== PUBLICIDAD MÓVIL ===== */
+        .publicidad-movil {
+            display: none;
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .publicidad-movil .promo-box-card {
+            background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 100%);
+            border: 2px solid var(--accent-color);
+            border-radius: 14px;
+            padding: 12px 16px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .publicidad-movil .promo-box-card:hover {
+            transform: scale(1.01);
+            box-shadow: 0 8px 30px rgba(245, 158, 11, 0.2);
+        }
+        
+        .publicidad-movil .promo-box-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 60%;
+            height: 200%;
+            background: rgba(251, 191, 36, 0.03);
+            transform: rotate(15deg);
+        }
+
+        @media (max-width: 992px) {
+            .col-izquierda {
+                flex: 0 0 100%;
+                width: 100%;
+                border-right: none;
+            }
+            .col-derecha {
+                flex: 0 0 100%;
+                width: 100%;
+                display: none;
+            }
+            .row-contenido {
+                flex-direction: column;
+                min-height: auto;
+            }
+            .publicidad-movil {
+                display: block;
+            }
+        }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .no-print { display: none !important; }
+            .secure-data-box { box-shadow: none; border: none; padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NOTIFICACIÓN -->
+<div id="toastNotification" class="toast-notification">
+    <i class="fas fa-check-circle"></i>
+    <span id="toastMessage">Archivo cargado correctamente</span>
+</div>
+
+<!-- CONTENEDOR PRINCIPAL / CREADOR -->
+<div id="appContainer" class="main-container">
+    <div class="header">
+        <h2>Generador de Datos</h2>
+        <p>Crea un archivo HTML con tus datos de forma rápida y sencilla</p>
+    </div>
+
+    <div class="row-contenido">
+        <!-- COLUMNA IZQUIERDA - 70% -->
+        <div class="col-izquierda">
+            <div class="scroll-area">
+                <form id="secureForm" class="form-contenido">
+                    <!-- ENCABEZADO CON BOTÓN EDITAR Y UNDO/REDO -->
+                    <div class="editor-header">
+                        <div class="editor-header-left">
+                            <h5 class="fw-bold mb-0"><i class="fas fa-edit me-2"></i>Editor de Datos</h5>
+                            <button type="button" class="btn-undo-redo" id="btnUndo" onclick="deshacer()" title="Deshacer (Ctrl+Z)" disabled>
+                                <i class="fas fa-undo-alt"></i>
+                            </button>
+                            <button type="button" class="btn-undo-redo" id="btnRedo" onclick="rehacer()" title="Rehacer (Ctrl+Y)" disabled>
+                                <i class="fas fa-redo-alt"></i>
+                            </button>
+                        </div>
+                        <div class="editor-header-right">
+                            <a href="https://youtu.be/LLb4cEL0qQ8?si=SX-09xAlYEamlHsH" target="_blank" class="btn-tutorial" title="Ver tutorial en YouTube">
+                                <i class="fab fa-youtube"></i> Tutorial
+                            </a>
+                            <button type="button" class="btn btn-sm btn-editar-archivo fw-bold" onclick="document.getElementById('fileInput').click()">
+                                <i class="fas fa-folder-open me-1"></i> Editar Archivo
+                            </button>
+                            <input type="file" id="fileInput" accept=".html" style="display: none;" onchange="cargarArchivoParaEditar(event)">
+                        </div>
+                    </div>
+
+                    <div class="form-scroll">
+                        <!-- TÍTULO PRINCIPAL -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Título</label>
+                            <input type="text" class="form-control" id="tituloPrincipal" placeholder="Ej. Netflix, Spotify, Datos Fiscales..." required oninput="detectarCambiosYDiferencias()">
+                        </div>
+
+                        <hr class="my-3">
+                        
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <label class="form-label fw-bold mb-0"><i class="fas fa-list-ul me-1"></i> Filas de Datos</label>
+                        </div>
+                        
+                        <!-- CONTENEDOR DE FILAS DINÁMICAS -->
+                        <div id="filasContainer" oninput="detectarCambiosYDiferencias()"></div>
+
+                        <!-- BOTONES AGREGAR -->
+                        <div class="row g-2 mb-3">
+                            <div class="col-md-6">
+                                <button type="button" class="btn btn-agregar-fila w-100 py-2 fw-bold" onclick="agregarFilaDatos()">
+                                    <i class="fas fa-plus me-1"></i> Agregar Fila
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <button type="button" class="btn btn-agregar-nota w-100 py-2 fw-bold" onclick="agregarFilaNota()">
+                                    <i class="fas fa-sticky-note me-1"></i> Agregar Nota
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- ===== PUBLICIDAD MÓVIL: ANTES DEL PIN ===== -->
+                        <div class="publicidad-movil">
+                            <div class="promo-box-card">
+                                <span class="promo-box-badge"><i class="fas fa-fire me-1"></i> Exclusivo</span>
+                                <div class="promo-box-title">El Secreto Mejor Guardado</div>
+                                <div class="promo-box-desc">Para Ganar tus Primeros <strong style="color: #FCD34D;">$1,000 USD</strong> por Internet, <strong style="color: #FCD34D;">Sin Inversión</strong>.</div>
+                                <a href="#" class="promo-box-btn" target="_blank">Descubrir Gratis <i class="fas fa-arrow-right ms-1"></i></a>
+                            </div>
+                        </div>
+
+                        <!-- PIN DE PROTECCIÓN -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-lock me-1"></i> PIN de Protección (Opcional)
+                                <span class="pin-badge ms-2">4 números</span>
+                            </label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="pinProteccion" placeholder="Ej. 1234" maxlength="4" pattern="[0-9]{4}" inputmode="numeric" oninput="detectarCambiosYDiferencias()">
+                                <button class="btn btn-outline-secondary" type="button" onclick="togglePinVisibility()">
+                                    <i class="fas fa-eye" id="pinIcon"></i>
+                                </button>
+                            </div>
+                            <small class="text-muted">Ingresa 4 números para proteger tu archivo (opcional).</small>
+                        </div>
+
+                        <!-- BOTONES CENTRALIZADOS -->
+                        <div class="botones-centrados pb-2">
+                            <button type="submit" id="btnGenerar" class="btn btn-primary btn-pequeno fw-bold">
+                                <i class="fas fa-file-alt me-2"></i> Generar Archivo
+                            </button>
+                            <div id="downloadSection" style="display: none; display: inline-block;">
+                                <button class="btn btn-success btn-descargar fw-bold" onclick="descargarHtmlAutonomo()">
+                                    <i class="fas fa-download me-2"></i> Descargar Archivo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- ===== FOOTER - SIEMPRE AL FINAL DE LA COLUMNA ===== -->
+            <div class="footer-columna-izquierda">
+                <div class="separador"></div>
+                <a href="https://wa.me/521234567890?text=Hola%2C%20tengo%20una%20consulta%20sobre%20el%20Generador%20de%20Datos" target="_blank">
+                    <i class="fab fa-whatsapp"></i> Contáctanos aquí
+                </a>
+            </div>
+        </div>
+
+        <!-- COLUMNA DERECHA - 30% -->
+        <div class="col-derecha">
+            <div class="right-panel-container">
+                <!-- BLOQUE COMERCIAL -->
+                <div class="promo-box-area">
+                    <div class="promo-box-card">
+                        <span class="promo-box-badge"><i class="fas fa-fire me-1"></i> Exclusivo</span>
+                        <div class="promo-box-title" id="ownerPromoTitle">El Secreto Mejor Guardado</div>
+                        <div class="promo-box-desc" id="ownerPromoDesc">Para Ganar tus Primeros <strong style="color: #FCD34D;">$1,000 USD</strong> por Internet, <strong style="color: #FCD34D;">Sin Inversión</strong>.</div>
+                        <a href="#" id="ownerPromoBtnLink" class="promo-box-btn" target="_blank">Descubrir Gratis <i class="fas fa-arrow-right ms-1"></i></a>
+                    </div>
+                </div>
+
+                <!-- GUÍA DE USO Y PRIVACIDAD -->
+                <div class="instructions-scroll-area">
+                    <h6 class="fw-bold text-secondary mb-2" style="font-size: 0.85rem;"><i class="fas fa-info-circle me-1"></i> Guía de Uso y Privacidad</h6>
+                    <div class="p-3 shadow-sm border bg-white mb-2" style="border-radius: 10px; font-size: 0.8rem; line-height: 1.4;">
+                        <p class="text-secondary mb-2">
+                            <i class="fas fa-shield-alt text-success me-1"></i> <strong>Protege tu información:</strong> Puedes resguardar datos sensibles y encriptarlos de forma local con una contraseña segura.
+                        </p>
+                        <p class="text-secondary mb-2">
+                            <i class="fas fa-database text-primary me-1"></i> <strong>Ejemplos prácticos:</strong> Almacena números de identificación, credenciales de acceso, contraseñas privadas o notas confidenciales.
+                        </p>
+                        <p class="text-secondary mb-2">
+                            <i class="fas fa-cloud-upload-alt text-info me-1"></i> <strong>Enlaces en la nube:</strong> Agrega fácilmente la dirección de descarga directa de tus documentos respaldados en plataformas como Google Drive o Dropbox.
+                        </p>
+                        <p class="text-secondary mb-2">
+                            <i class="fas fa-film text-danger me-1"></i> <strong>Organiza tus suscripciones:</strong> Por ejemplo, en el <strong>Campo 1</strong> escribe "Netflix", en el <strong>Campo 2</strong> tu contraseña "AC123", y en el <strong>Campo 3</strong> el enlace directo a <strong>netflix.com</strong> para acceder rápidamente. ¡Así tendrás todas tus cuentas organizadas y seguras!
+                        </p>
+                        <p class="text-secondary mb-2">
+                            <i class="fas fa-sticky-note text-green-600 me-1"></i> <strong>Agrega notas importantes:</strong> Usa el botón <strong>"Agregar Nota"</strong> para incluir observaciones, recordatorios o información adicional debajo de cada fila. Puedes mover las notas con las flechas <strong>▲</strong> y <strong>▼</strong> para colocarlas donde necesites.
+                        </p>
+                        <p class="text-secondary mb-2">
+                            <i class="fas fa-exclamation-triangle text-warning me-1"></i> <strong>Recomendación importante:</strong> Te recomendamos generar un archivo con PIN (Contraseña) y otro sin contraseña de respaldo y guardarlo en un lugar seguro, por si se te olvida la contraseña.
+                        </p>
+                        <p class="text-secondary mb-0">
+                            <i class="fas fa-edit text-primary me-1"></i> <strong>Rellena tus datos</strong> y genera tu archivo personalizado de forma segura.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ============================================================
+    // CONFIGURACIÓN
+    // ============================================================
+    const CONFIG_DUEÑO = {
+        promoTitulo: "El Secreto Mejor Guardado",
+        promoDescripcion: "Para Ganar tus Primeros $1,000 USD por Internet, Sin Inversión.",
+        promoEnlace: "https://ejemplo.com/secreto-ganar-dolares"
+    };
+
+    let datosActuales = null;
+    let pinActual = '';
+    let modoEdicion = false;
+    let archivoGenerado = false;
+    let datosOriginales = null;
+
+    // ============================================================
+    // HISTORIAL PARA UNDO/REDO
+    // ============================================================
+    let historial = [];
+    let historialIndex = -1;
+    const MAX_HISTORIAL = 50;
+    let guardandoHistorial = false;
+
+    function obtenerEstadoActual() {
+        const titulo = document.getElementById('tituloPrincipal').value;
+        const pin = document.getElementById('pinProteccion').value;
+        const filas = [];
+        document.querySelectorAll('.dynamic-row, .dynamic-row-nota').forEach(row => {
+            const esNota = row.classList.contains('dynamic-row-nota');
+            if (esNota) {
+                const nota = row.querySelector('.nota-texto')?.value || '';
+                filas.push({ tipo: 'nota', nota: nota });
+            } else {
+                const c1 = row.querySelector('.campo-1')?.value || '';
+                const c2 = row.querySelector('.campo-2')?.value || '';
+                const c3 = row.querySelector('.campo-3')?.value || '';
+                filas.push({ tipo: 'fila', c1, c2, c3 });
+            }
+        });
+        return { titulo, pin, filas };
+    }
+
+    function restaurarEstado(estado) {
+        guardandoHistorial = true;
+        
+        document.getElementById('tituloPrincipal').value = estado.titulo || '';
+        document.getElementById('pinProteccion').value = estado.pin || '';
+        
+        const container = document.getElementById('filasContainer');
+        container.innerHTML = '';
+        
+        if (estado.filas && estado.filas.length > 0) {
+            estado.filas.forEach(fila => {
+                if (fila.tipo === 'nota') {
+                    agregarFilaNota(fila.nota || '');
+                } else {
+                    agregarFilaDatos(fila.c1 || '', fila.c2 || '', fila.c3 || '');
+                }
+            });
+        } else {
+            agregarFilaDatos();
+        }
+        
+        actualizarBotonesMovimiento();
+        detectarCambiosYDiferencias();
+        
+        guardandoHistorial = false;
+    }
+
+    function guardarEstadoHistorial() {
+        if (guardandoHistorial) return;
+        
+        const estado = obtenerEstadoActual();
+        
+        if (historial.length > 0) {
+            const ultimo = historial[historial.length - 1];
+            if (JSON.stringify(ultimo) === JSON.stringify(estado)) {
+                return;
+            }
+        }
+        
+        if (historialIndex < historial.length - 1) {
+            historial = historial.slice(0, historialIndex + 1);
+        }
+        
+        historial.push(estado);
+        if (historial.length > MAX_HISTORIAL) {
+            historial.shift();
+        }
+        historialIndex = historial.length - 1;
+        actualizarBotonesUndoRedo();
+    }
+
+    function deshacer() {
+        if (historialIndex > 0) {
+            historialIndex--;
+            restaurarEstado(historial[historialIndex]);
+            actualizarBotonesUndoRedo();
+            mostrarNotificacion('Deshacer ✓', 'success');
+        }
+    }
+
+    function rehacer() {
+        if (historialIndex < historial.length - 1) {
+            historialIndex++;
+            restaurarEstado(historial[historialIndex]);
+            actualizarBotonesUndoRedo();
+            mostrarNotificacion('Rehacer ✓', 'success');
+        }
+    }
+
+    function actualizarBotonesUndoRedo() {
+        document.getElementById('btnUndo').disabled = historialIndex <= 0;
+        document.getElementById('btnRedo').disabled = historialIndex >= historial.length - 1;
+    }
+
+    // Atajos de teclado
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+            e.preventDefault();
+            deshacer();
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'y') {
+            e.preventDefault();
+            rehacer();
+        }
+    });
+
+    // ============================================================
+    // FUNCIONES PRINCIPALES
+    // ============================================================
+    window.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('ownerPromoTitle').textContent = CONFIG_DUEÑO.promoTitulo;
+        document.getElementById('ownerPromoDesc').innerHTML = CONFIG_DUEÑO.promoDescripcion.replace(/\$1,000 USD/g, '<strong style="color: #FCD34D;">$1,000 USD</strong>').replace(/Sin Inversión/g, '<strong style="color: #FCD34D;">Sin Inversión</strong>');
+        document.getElementById('ownerPromoBtnLink').href = CONFIG_DUEÑO.promoEnlace;
+
+        agregarFilaDatos();
+        setTimeout(() => {
+            guardarEstadoHistorial();
+        }, 100);
+    });
+
+    function mostrarNotificacion(mensaje, tipo = 'success') {
+        const toast = document.getElementById('toastNotification');
+        const msg = document.getElementById('toastMessage');
+        const icon = toast.querySelector('i');
+        
+        msg.textContent = mensaje;
+        icon.className = tipo === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+        toast.style.background = tipo === 'success' ? '#0F172A' : '#DC2626';
+        
+        toast.classList.add('show');
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 1500);
+    }
+
+    function obtenerFilasActuales() {
+        const filas = [];
+        document.querySelectorAll('.dynamic-row, .dynamic-row-nota').forEach(row => {
+            const esNota = row.classList.contains('dynamic-row-nota');
+            if (esNota) {
+                const nota = row.querySelector('.nota-texto')?.value.trim() || '';
+                if (nota) {
+                    filas.push({ tipo: 'nota', nota: nota });
+                }
+            } else {
+                const c1 = row.querySelector('.campo-1')?.value.trim() || '';
+                const c2 = row.querySelector('.campo-2')?.value.trim() || '';
+                const c3 = row.querySelector('.campo-3')?.value.trim() || '';
+                if (c1 || c2 || c3) {
+                    filas.push({ tipo: 'fila', c1, c2, c3 });
+                }
+            }
+        });
+        return filas;
+    }
+
+    function detectarCambiosYDiferencias() {
+        guardarEstadoHistorial();
+        
+        if (!archivoGenerado) return;
+        
+        const tituloActual = document.getElementById('tituloPrincipal').value.trim();
+        const pinActual = document.getElementById('pinProteccion').value.trim();
+        const filasActuales = obtenerFilasActuales();
+
+        let hayCambios = false;
+        if (datosOriginales) {
+            if (tituloActual !== datosOriginales.titulo) hayCambios = true;
+            if (pinActual !== datosOriginales.pin) hayCambios = true;
+            if (filasActuales.length !== datosOriginales.filas.length) hayCambios = true;
+            if (!hayCambios) {
+                for (let i = 0; i < filasActuales.length; i++) {
+                    if (i >= datosOriginales.filas.length) { hayCambios = true; break; }
+                    const orig = datosOriginales.filas[i];
+                    const act = filasActuales[i];
+                    if (orig.tipo !== act.tipo) { hayCambios = true; break; }
+                    if (orig.tipo === 'nota') {
+                        if (orig.nota !== act.nota) { hayCambios = true; break; }
+                    } else {
+                        if (orig.c1 !== act.c1 || orig.c2 !== act.c2 || orig.c3 !== act.c3) {
+                            hayCambios = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        const btnGenerar = document.getElementById('btnGenerar');
+        if (hayCambios) {
+            btnGenerar.disabled = false;
+            btnGenerar.classList.remove('btn-actualizar-desactivado');
+            btnGenerar.innerHTML = '<i class="fas fa-sync me-2"></i> Actualizar';
+            btnGenerar.style.backgroundColor = '';
+            btnGenerar.style.opacity = '1';
+            btnGenerar.style.cursor = 'pointer';
+        } else {
+            btnGenerar.disabled = true;
+            btnGenerar.classList.add('btn-actualizar-desactivado');
+            btnGenerar.innerHTML = '<i class="fas fa-sync me-2"></i> Actualizar';
+        }
+    }
+
+    function togglePinVisibility() {
+        const pinInput = document.getElementById('pinProteccion');
+        const icon = document.getElementById('pinIcon');
+        if (pinInput.type === 'password') {
+            pinInput.type = 'text';
+            icon.className = 'fas fa-eye-slash';
+        } else {
+            pinInput.type = 'password';
+            icon.className = 'fas fa-eye';
+        }
+    }
+
+    document.getElementById('pinProteccion').addEventListener('input', function(e) {
+        this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4);
+        detectarCambiosYDiferencias();
+    });
+
+    function moverFila(elemento, direccion) {
+        const container = document.getElementById('filasContainer');
+        const filas = Array.from(container.children);
+        const index = filas.indexOf(elemento);
+        
+        if (direccion === 'up' && index > 0) {
+            container.insertBefore(elemento, filas[index - 1]);
+        } else if (direccion === 'down' && index < filas.length - 1) {
+            container.insertBefore(elemento, filas[index + 2]);
+        }
+        
+        actualizarBotonesMovimiento();
+        detectarCambiosYDiferencias();
+        setTimeout(() => guardarEstadoHistorial(), 50);
+    }
+
+    function actualizarBotonesMovimiento() {
+        const container = document.getElementById('filasContainer');
+        const filas = Array.from(container.children);
+        
+        filas.forEach((fila, index) => {
+            const btnUp = fila.querySelector('.btn-mover-up');
+            const btnDown = fila.querySelector('.btn-mover-down');
+            
+            if (btnUp) {
+                btnUp.disabled = index === 0;
+                btnUp.title = index === 0 ? 'Ya está en la primera posición' : 'Mover hacia arriba';
+            }
+            if (btnDown) {
+                btnDown.disabled = index === filas.length - 1;
+                btnDown.title = index === filas.length - 1 ? 'Ya está en la última posición' : 'Mover hacia abajo';
+            }
+        });
+    }
+
+    function eliminarFila(elemento) {
+        elemento.remove();
+        detectarCambiosYDiferencias();
+        setTimeout(() => guardarEstadoHistorial(), 50);
+    }
+
+    function agregarFilaDatos(val1 = '', val2 = '', val3 = '') {
+        const container = document.getElementById('filasContainer');
+        const div = document.createElement('div');
+        div.className = 'dynamic-row position-relative';
+        div.innerHTML = `
+            <button type="button" class="btn-cerrar" onclick="eliminarFila(this.parentElement)" title="Eliminar fila">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="acciones-mover">
+                <button type="button" class="btn-mover btn-mover-up" onclick="moverFila(this.closest('.dynamic-row, .dynamic-row-nota'), 'up')" title="Mover hacia arriba">▲</button>
+                <button type="button" class="btn-mover btn-mover-down" onclick="moverFila(this.closest('.dynamic-row, .dynamic-row-nota'), 'down')" title="Mover hacia abajo">▼</button>
+            </div>
+            <div class="row g-2">
+                <div class="col-md-4">
+                    <label class="form-label small text-muted mb-1">Campo 1 (Título)</label>
+                    <input type="text" class="form-control form-control-sm campo-1" placeholder="Ej. Netflix" value="${val1}" oninput="detectarCambiosYDiferencias()">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label small text-muted mb-1">Campo 2 (Dato)</label>
+                    <input type="text" class="form-control form-control-sm campo-2" placeholder="Ej. AC123" value="${val2}" oninput="detectarCambiosYDiferencias()">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label small text-muted mb-1">Campo 3</label>
+                    <input type="text" class="form-control form-control-sm campo-3" placeholder="Enlace o texto" value="${val3}" oninput="detectarCambiosYDiferencias()">
+                </div>
+            </div>
+        `;
+        container.appendChild(div);
+        actualizarBotonesMovimiento();
+        if (archivoGenerado) detectarCambiosYDiferencias();
+    }
+
+    function agregarFilaNota(nota = '') {
+        const container = document.getElementById('filasContainer');
+        const div = document.createElement('div');
+        div.className = 'dynamic-row-nota position-relative';
+        div.innerHTML = `
+            <button type="button" class="btn-cerrar" onclick="eliminarFila(this.parentElement)" title="Eliminar nota">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="acciones-mover">
+                <button type="button" class="btn-mover btn-mover-up" onclick="moverFila(this.closest('.dynamic-row, .dynamic-row-nota'), 'up')" title="Mover hacia arriba">▲</button>
+                <button type="button" class="btn-mover btn-mover-down" onclick="moverFila(this.closest('.dynamic-row, .dynamic-row-nota'), 'down')" title="Mover hacia abajo">▼</button>
+            </div>
+            <div class="row g-2">
+                <div class="col-12">
+                    <label class="form-label small nota-label mb-1"><i class="fas fa-sticky-note me-1"></i> Nota</label>
+                    <textarea class="form-control form-control-sm nota-texto" rows="1" placeholder="Escribe aquí tu nota (máximo 3 líneas)..." oninput="autoResizeNota(this); detectarCambiosYDiferencias();" style="resize: none; min-height: 38px; max-height: 100px; overflow-y: auto;">${nota}</textarea>
+                </div>
+            </div>
+        `;
+        container.appendChild(div);
+        actualizarBotonesMovimiento();
+        if (archivoGenerado) detectarCambiosYDiferencias();
+        
+        const textarea = div.querySelector('.nota-texto');
+        if (textarea) setTimeout(() => autoResizeNota(textarea), 50);
+    }
+
+    function autoResizeNota(textarea) {
+        textarea.style.height = 'auto';
+        const lineHeight = parseInt(getComputedStyle(textarea).lineHeight) || 20;
+        const maxHeight = lineHeight * 3 + 4;
+        const scrollHeight = textarea.scrollHeight;
+        textarea.style.height = Math.min(scrollHeight, maxHeight) + 'px';
+    }
+
+    function cifrarTexto(texto, pin) {
+        let resultado = '';
+        for (let i = 0; i < texto.length; i++) {
+            const charCode = texto.charCodeAt(i);
+            const pinChar = pin.charCodeAt(i % pin.length);
+            resultado += String.fromCharCode(charCode + pinChar);
+        }
+        return btoa(resultado);
+    }
+
+    function descifrarTexto(textoCifrado, pin) {
+        try {
+            const texto = atob(textoCifrado);
+            let resultado = '';
+            for (let i = 0; i < texto.length; i++) {
+                const charCode = texto.charCodeAt(i);
+                const pinChar = pin.charCodeAt(i % pin.length);
+                resultado += String.fromCharCode(charCode - pinChar);
+            }
+            return resultado;
+        } catch {
+            return null;
+        }
+    }
+
+    function cargarArchivoParaEditar(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const contenido = e.target.result;
+                
+                const pinMatch = contenido.match(/data-pin="([^"]*)"/);
+                let datosDesencriptados = null;
+                
+                if (pinMatch) {
+                    const pinGuardado = pinMatch[1];
+                    const pinIngresado = prompt('Este archivo está protegido con PIN de 4 números. Ingresa la contraseña para editarlo:');
+                    if (!pinIngresado || pinIngresado.length !== 4 || !/^\d{4}$/.test(pinIngresado)) {
+                        mostrarNotificacion('PIN inválido. Debe ser 4 números.', 'error');
+                        return;
+                    }
+                    
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(contenido, 'text/html');
+                    const datosCifrados = doc.querySelector('meta[name="datos-cifrados"]')?.getAttribute('content');
+                    
+                    if (datosCifrados) {
+                        const datosJson = descifrarTexto(datosCifrados, pinIngresado);
+                        if (datosJson) {
+                            datosDesencriptados = JSON.parse(datosJson);
+                            if (datosDesencriptados.pin !== pinIngresado) {
+                                mostrarNotificacion('PIN incorrecto. No se puede editar el archivo.', 'error');
+                                return;
+                            }
+                        } else {
+                            mostrarNotificacion('PIN incorrecto. No se puede editar el archivo.', 'error');
+                            return;
+                        }
+                    } else {
+                        if (pinIngresado !== pinGuardado) {
+                            mostrarNotificacion('PIN incorrecto. No se puede editar el archivo.', 'error');
+                            return;
+                        }
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(contenido, 'text/html');
+                        const tituloElement = doc.querySelector('h3.fw-bold.text-dark');
+                        const titulo = tituloElement ? tituloElement.textContent.trim() : 'Datos';
+                        const filas = [];
+                        const filasData = doc.querySelectorAll('.data-table tbody tr');
+                        filasData.forEach(row => {
+                            const esNota = row.classList.contains('fila-nota') || row.classList.contains('nota-texto');
+                            if (esNota) {
+                                const notaText = row.querySelector('div')?.textContent.trim() || '';
+                                if (notaText) {
+                                    filas.push({ tipo: 'nota', nota: notaText });
+                                }
+                            } else {
+                                const celdas = row.querySelectorAll('td');
+                                if (celdas.length >= 3) {
+                                    let campo1 = celdas[0].textContent.trim();
+                                    let campo2 = celdas[1].textContent.trim();
+                                    let campo3 = '';
+                                    const enlace = celdas[2].querySelector('a');
+                                    if (enlace) {
+                                        campo3 = enlace.href;
+                                    } else {
+                                        campo3 = celdas[2].textContent.trim();
+                                    }
+                                    const spanTexto = celdas[2].querySelector('span');
+                                    if (spanTexto && campo3 === '-') {
+                                        campo3 = spanTexto.textContent.trim();
+                                    }
+                                    if (campo1 || campo2 || campo3) {
+                                        filas.push({ tipo: 'fila', c1: campo1, c2: campo2, c3: campo3 });
+                                    }
+                                }
+                            }
+                        });
+                        datosDesencriptados = { titulo, filas, pin: pinIngresado };
+                    }
+                }
+
+                if (!pinMatch && !datosDesencriptados) {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(contenido, 'text/html');
+                    const tituloElement = doc.querySelector('h3.fw-bold.text-dark');
+                    const titulo = tituloElement ? tituloElement.textContent.trim() : 'Datos';
+                    const filas = [];
+                    const filasData = doc.querySelectorAll('.data-table tbody tr');
+                    filasData.forEach(row => {
+                        const esNota = row.classList.contains('fila-nota') || row.classList.contains('nota-texto');
+                        if (esNota) {
+                            const notaText = row.querySelector('div')?.textContent.trim() || '';
+                            if (notaText) {
+                                filas.push({ tipo: 'nota', nota: notaText });
+                            }
+                        } else {
+                            const celdas = row.querySelectorAll('td');
+                            if (celdas.length >= 3) {
+                                let campo1 = celdas[0].textContent.trim();
+                                let campo2 = celdas[1].textContent.trim();
+                                let campo3 = '';
+                                const enlace = celdas[2].querySelector('a');
+                                if (enlace) {
+                                    campo3 = enlace.href;
+                                } else {
+                                    campo3 = celdas[2].textContent.trim();
+                                }
+                                const spanTexto = celdas[2].querySelector('span');
+                                if (spanTexto && campo3 === '-') {
+                                    campo3 = spanTexto.textContent.trim();
+                                }
+                                if (campo1 || campo2 || campo3) {
+                                    filas.push({ tipo: 'fila', c1: campo1, c2: campo2, c3: campo3 });
+                                }
+                            }
+                        }
+                    });
+                    datosDesencriptados = { titulo, filas, pin: '' };
+                }
+
+                if (datosDesencriptados) {
+                    document.getElementById('tituloPrincipal').value = datosDesencriptados.titulo || 'Datos';
+                    document.getElementById('pinProteccion').value = datosDesencriptados.pin || '';
+                    
+                    document.getElementById('filasContainer').innerHTML = '';
+                    
+                    if (datosDesencriptados.filas && datosDesencriptados.filas.length > 0) {
+                        datosDesencriptados.filas.forEach(fila => {
+                            if (fila.tipo === 'nota') {
+                                agregarFilaNota(fila.nota || '');
+                            } else {
+                                agregarFilaDatos(fila.c1 || '', fila.c2 || '', fila.c3 || '');
+                            }
+                        });
+                    } else {
+                        agregarFilaDatos();
+                    }
+
+                    modoEdicion = true;
+                    archivoGenerado = true;
+                    
+                    guardarDatosOriginales();
+                    setTimeout(() => guardarEstadoHistorial(), 100);
+                    
+                    const btnGenerar = document.getElementById('btnGenerar');
+                    btnGenerar.disabled = true;
+                    btnGenerar.classList.add('btn-actualizar-desactivado');
+                    btnGenerar.innerHTML = '<i class="fas fa-sync me-2"></i> Actualizar';
+                    
+                    document.getElementById('downloadSection').style.display = 'inline-block';
+                    
+                    mostrarNotificacion('Archivo cargado correctamente. Puedes editarlo ahora.');
+                }
+            } catch (error) {
+                mostrarNotificacion('Error al cargar el archivo.', 'error');
+                console.error(error);
+            }
+        };
+        reader.readAsText(file);
+        event.target.value = '';
+    }
+
+    function guardarDatosOriginales() {
+        const titulo = document.getElementById('tituloPrincipal').value.trim();
+        const pin = document.getElementById('pinProteccion').value.trim();
+        const filas = obtenerFilasActuales();
+        datosOriginales = { titulo, pin, filas };
+    }
+
+    document.getElementById('secureForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const tituloPrincipal = document.getElementById('tituloPrincipal').value.trim();
+        const pin = document.getElementById('pinProteccion').value.trim();
+        const filas = obtenerFilasActuales();
+
+        if (!tituloPrincipal) {
+            mostrarNotificacion('Por favor, ingresa un título para tu registro.', 'error');
+            return;
+        }
+
+        if (filas.length === 0) {
+            mostrarNotificacion('Por favor, agrega al menos una fila de datos o una nota.', 'error');
+            return;
+        }
+
+        if (pin && !/^\d{4}$/.test(pin)) {
+            mostrarNotificacion('El PIN debe ser exactamente 4 números.', 'error');
+            return;
+        }
+
+        const registroCompleto = { titulo: tituloPrincipal, filas: filas, pin: pin };
+        datosActuales = registroCompleto;
+        pinActual = pin;
+
+        archivoGenerado = true;
+        guardarDatosOriginales();
+        setTimeout(() => guardarEstadoHistorial(), 100);
+
+        const btnGenerar = document.getElementById('btnGenerar');
+        btnGenerar.disabled = true;
+        btnGenerar.classList.add('btn-actualizar-desactivado');
+        btnGenerar.innerHTML = '<i class="fas fa-sync me-2"></i> Actualizar';
+
+        document.getElementById('downloadSection').style.display = 'inline-block';
+        
+        mostrarNotificacion('Archivo generado correctamente.');
+    });
+
+    function descargarHtmlAutonomo() {
+        const tituloPrincipal = document.getElementById('tituloPrincipal').value.trim();
+        const pin = document.getElementById('pinProteccion').value.trim();
+        const filas = obtenerFilasActuales();
+        
+        datosActuales = { titulo: tituloPrincipal, filas: filas, pin: pin };
+
+        const htmlContent = generarArchivoHTML(datosActuales);
+        const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        const nombreArchivo = datosActuales.titulo.replace(/\s+/g, '_') || 'datos';
+        const pinSufijo = datosActuales.pin ? '_protegido' : '';
+        a.download = `${nombreArchivo}${pinSufijo}_${Date.now()}.html`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        mostrarNotificacion('Archivo descargado correctamente.');
+    }
+
+    function esUrlValida(texto) {
+        try {
+            const url = new URL(texto);
+            return url.protocol === 'http:' || url.protocol === 'https:';
+        } catch {
+            return false;
+        }
+    }
+
+    function generarArchivoHTML(datos) {
+        let filasHtml = '';
+        datos.filas.forEach((f) => {
+            if (f.tipo === 'nota') {
+                filasHtml += `
+                    <tr class="fila-nota">
+                        <td colspan="3" style="padding-top: 8px; padding-bottom: 2px;">
+                            <div style="background: #F0F7FF; padding: 6px 12px; border-radius: 6px; border-left: 3px solid #3B82F6; font-style: italic; color: #1E40AF; font-size: 0.85rem; white-space: pre-wrap; line-height: 1.4; text-align: left;">
+                                <i class="fas fa-sticky-note me-1" style="color: #059669;"></i> ${f.nota || ''}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            } else {
+                let campo3Html = '-';
+                if (f.c3) {
+                    if (esUrlValida(f.c3)) {
+                        campo3Html = `
+                            <div class="d-flex gap-1" style="justify-content: flex-end;">
+                                <a href="${f.c3}" target="_blank" class="btn btn-sm btn-primary">Ir al enlace</a>
+                                <button class="btn btn-sm btn-outline-secondary" onclick="navigator.clipboard.writeText('${f.c3}')">Copiar</button>
+                            </div>
+                        `;
+                    } else {
+                        campo3Html = `<span>${f.c3}</span>`;
+                    }
+                }
+                filasHtml += `
+                    <tr>
+                        <td style="word-wrap: break-word; max-width: 250px;"><strong>${f.c1 || '-'}</strong></td>
+                        <td style="word-wrap: break-word; max-width: 250px;">${f.c2 || '-'}</td>
+                        <td style="text-align: right; padding-right: 15px;">${campo3Html}</td>
+                    </tr>
+                `;
+            }
+        });
+
+        let pinAttribute = '';
+        let metaDatosCifrados = '';
+        let scriptVerificacion = '';
+        let tituloMostrar = datos.titulo || 'Datos';
+        let tienePin = datos.pin && datos.pin.length === 4;
+        
+        if (tienePin) {
+            pinAttribute = `data-pin="${datos.pin}"`;
+            const datosJson = JSON.stringify({
+                titulo: datos.titulo,
+                filas: datos.filas,
+                pin: datos.pin
+            });
+            const datosCifrados = cifrarTexto(datosJson, datos.pin);
+            metaDatosCifrados = `<meta name="datos-cifrados" content="${datosCifrados}">`;
+            tituloMostrar = '🔒 ' + (datos.titulo || 'Datos');
+            
+            scriptVerificacion = `
+            <script>
+                (function() {
+                    const pinGuardado = document.querySelector('html').getAttribute('data-pin');
+                    const datosCifrados = document.querySelector('meta[name="datos-cifrados"]')?.getAttribute('content');
+                    
+                    function descifrarTexto(textoCifrado, pin) {
+                        try {
+                            const texto = atob(textoCifrado);
+                            let resultado = '';
+                            for (let i = 0; i < texto.length; i++) {
+                                const charCode = texto.charCodeAt(i);
+                                const pinChar = pin.charCodeAt(i % pin.length);
+                                resultado += String.fromCharCode(charCode - pinChar);
+                            }
+                            return resultado;
+                        } catch {
+                            return null;
+                        }
+                    }
+                    
+                    function verificarPIN() {
+                        const pinInput = document.getElementById('pinInput');
+                        const pinIngresado = pinInput.value.trim();
+                        if (!pinIngresado || pinIngresado.length !== 4 || !/^\\d{4}$/.test(pinIngresado)) {
+                            alert('PIN inválido. Debe ser 4 números.');
+                            return;
+                        }
+                        
+                        if (datosCifrados) {
+                            const datosJson = descifrarTexto(datosCifrados, pinIngresado);
+                            if (datosJson) {
+                                try {
+                                    const datos = JSON.parse(datosJson);
+                                    if (datos.pin === pinIngresado) {
+                                        document.getElementById('contenidoProtegido').style.display = 'block';
+                                        document.getElementById('verificacionPin').style.display = 'none';
+                                        return;
+                                    }
+                                } catch(e) {}
+                            }
+                        }
+                        
+                        alert('PIN incorrecto. No puedes ver este archivo.');
+                        document.getElementById('verificacionPin').innerHTML = \`
+                            <i class="fas fa-lock" style="color:#DC2626;"></i>
+                            <h3 style="color:#DC2626;">Acceso Denegado</h3>
+                            <p style="color:#6B7280;">El PIN ingresado es incorrecto.</p>
+                            <button class="btn btn-outline-secondary" onclick="location.reload()">Intentar de nuevo</button>
+                        \`;
+                    }
+                    
+                    document.addEventListener('DOMContentLoaded', function() {
+                        document.getElementById('contenidoProtegido').style.display = 'none';
+                        document.getElementById('verificacionPin').style.display = 'flex';
+                        document.getElementById('pinInput').addEventListener('keypress', function(e) {
+                            if (e.key === 'Enter') {
+                                verificarPIN();
+                            }
+                        });
+                    });
+                    
+                    window.verificarPIN = verificarPIN;
+                })();
+            <\/script>
+            `;
+        }
+
+        return `<!DOCTYPE html>
+<html lang="es" ${pinAttribute}>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${tituloMostrar}</title>
+    ${metaDatosCifrados}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+        body {
+            background: #e8ecf1;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .secure-data-box {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 90%;
+            width: auto;
+            min-width: 300px;
+            margin: 0 auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            border-top: 4px solid ${tienePin ? '#EF4444' : '#F59E0B'};
+            display: inline-block;
+        }
+        .pin-badge-header {
+            background: ${tienePin ? '#EF4444' : '#10B981'};
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+        .data-table { 
+            width: 100%; 
+            margin-top: 15px; 
+            table-layout: auto;
+        }
+        .data-table th { 
+            background: #0F172A; 
+            color: white; 
+            padding: 10px 15px; 
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+        .data-table td { 
+            padding: 10px 15px; 
+            font-size: 0.85rem; 
+            border-bottom: 1px solid #e2e8f0; 
+            vertical-align: middle; 
+            word-wrap: break-word;
+            max-width: 300px;
+        }
+        .data-table td:first-child {
+            word-break: break-word;
+            min-width: 80px;
+        }
+        .data-table td:nth-child(2) {
+            word-break: break-word;
+            min-width: 80px;
+        }
+        .data-table td:last-child { 
+            text-align: right;
+            min-width: 150px;
+            max-width: 300px;
+            padding-right: 20px;
+        }
+        .data-table td:last-child .d-flex { 
+            justify-content: flex-end; 
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        .data-table th:last-child { 
+            text-align: right;
+            padding-right: 20px;
+        }
+        .data-table .fila-nota td { 
+            border-bottom: none; 
+            padding-top: 6px;
+            padding-bottom: 2px;
+            max-width: 100%;
+            text-align: left !important;
+            padding-right: 15px !important;
+        }
+        .data-table .fila-nota td div {
+            max-width: 100%;
+        }
+        .data-table .fila-nota td:last-child {
+            text-align: left !important;
+            padding-right: 15px !important;
+        }
+        #verificacionPin {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 350px;
+            text-align: center;
+        }
+        #verificacionPin i {
+            font-size: 4rem;
+            color: #0F172A;
+            margin-bottom: 20px;
+        }
+        #verificacionPin h3 {
+            color: #0F172A;
+            margin-bottom: 10px;
+        }
+        #verificacionPin p {
+            color: #6B7280;
+            margin-bottom: 20px;
+            max-width: 300px;
+        }
+        #verificacionPin .pin-input {
+            max-width: 200px;
+            text-align: center;
+            font-size: 1.5rem;
+            letter-spacing: 8px;
+            padding: 10px;
+            border: 2px solid #E2E8F0;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        #verificacionPin .pin-input:focus {
+            border-color: #0F172A;
+            outline: none;
+        }
+        #contenidoProtegido {
+            display: none;
+        }
+        .btn-sm {
+            font-size: 0.75rem;
+            padding: 4px 10px;
+        }
+        @media print {
+            body { background: white; padding: 0; }
+            .no-print { display: none !important; }
+            .secure-data-box { 
+                box-shadow: none; 
+                border: none; 
+                padding: 20px;
+                max-width: 100%;
+                width: 100%;
+            }
+            .data-table td { max-width: none; }
+            .data-table .fila-nota td div {
+                background: #f8fafc !important;
+                border-left-color: #3B82F6 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+        @media (max-width: 768px) {
+            .secure-data-box { max-width: 100%; padding: 20px; }
+            .data-table td { max-width: 150px; }
+            .data-table td:last-child { min-width: 120px; }
+        }
+    </style>
+    ${scriptVerificacion}
+</head>
+<body>
+    <div class="secure-data-box">
+        ${tienePin ? `
+        <div id="verificacionPin">
+            <i class="fas fa-lock"></i>
+            <h3>Archivo Protegido</h3>
+            <p>Este archivo está protegido con un PIN de 4 números.<br>Ingresa la contraseña para ver su contenido.</p>
+            <input type="password" class="pin-input" id="pinInput" maxlength="4" placeholder="1234" inputmode="numeric">
+            <button class="btn btn-primary" onclick="verificarPIN()">Desbloquear</button>
+        </div>
+        ` : ''}
+        <div id="contenidoProtegido" ${!tienePin ? 'style="display:block;"' : ''}>
+            <div class="text-center mb-4">
+                ${tienePin ? `<span class="pin-badge-header"><i class="fas fa-lock me-1"></i> Protegido con PIN</span>` : ''}
+                <h3 class="fw-bold text-dark">${datos.titulo || 'Datos'}</h3>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table data-table">
+                    <thead>
+                        <tr>
+                            <th style="width:25%;">Campo 1</th>
+                            <th style="width:25%;">Campo 2</th>
+                            <th style="width:50%; text-align: right; padding-right: 20px;">Campo 3</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${filasHtml}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="text-center mt-4 no-print">
+                <button class="btn btn-outline-secondary btn-sm" onclick="window.print()">
+                    <i class="fas fa-print me-1"></i> Imprimir
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>`;
+    }
+</script>
+</body>
+</html>

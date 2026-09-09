@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Datos | Descarga Gratis</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-dark: #0A0F1D;
+            --bg-card: #111827;
+            --primary: #2563EB;
+            --accent: #F59E0B;
+            --success: #10B981;
+            --text-main: #F3F4F6;
+            --text-muted: #9CA3AF;
+            --border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0 20px;
+        }
+
+        /* ===== EFECTOS DE FONDO ===== */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        .bg-glow {
+            position: fixed;
+            top: -10%;
+            left: -10%;
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle at 30% 20%, rgba(30, 58, 138, 0.3) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(16, 185, 129, 0.2) 0%, transparent 50%);
+            z-index: -1;
+            pointer-events: none;
+            animation: floatGlow 15s infinite alternate;
+        }
+
+        @keyframes floatGlow {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(-5%, 5%) scale(1.1); }
+        }
+
+        /* ===== CONTENEDOR PRINCIPAL (UNA SOLA COLUMNA) ===== */
+        .landing-wrapper {
+            max-width: 850px;
+            width: 100%;
+            margin: 0 auto;
+            padding-top: 30px;
+            text-align: center;
+        }
+
+        /* ===== HERO / ENCABEZADO ===== */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding-bottom: 30px;
+        }
+
+        .badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(245, 158, 11, 0.12);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: var(--accent);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 20px;
+            animation: pulseBadge 2s infinite;
+        }
+
+        @keyframes pulseBadge {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+            50% { box-shadow: 0 0 20px 5px rgba(245, 158, 11, 0.2); }
+        }
+
+        .hero-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #FFFFFF 30%, #93C5FD 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            font-size: 1.2rem !important;
+            color: var(--text-muted);
+            line-height: 1.7;
+            max-width: 750px;
+            margin: 0 auto 25px;
+        }
+
+        .features-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 auto 30px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            max-width: 650px;
+        }
+
+        .features-list li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            border-radius: 50px;
+            white-space: nowrap;
+        }
+
+        .features-list i {
+            color: var(--success);
+            font-size: 0.95rem;
+        }
+
+        /* ===== BOTÓN PRINCIPAL ===== */
+        .btn-hero {
+            background: linear-gradient(135deg, var(--accent), #D97706);
+            color: #0A0F1D;
+            font-weight: 800;
+            font-size: 1.15rem;
+            padding: 16px 45px;
+            border-radius: 50px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 30px rgba(245, 158, 11, 0.4);
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .btn-hero:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(245, 158, 11, 0.5);
+            color: #0A0F1D;
+        }
+
+        /* ===== VIDEO ===== */
+        .video-section {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #FFFFFF;
+        }
+
+        .video-container {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(245, 158, 11, 0.2);
+            background: var(--bg-card);
+        }
+
+        .video-container iframe {
+            width: 100%;
+            height: 480px;
+            display: block;
+            border: none;
+        }
+
+        /* ===== FORMULARIO ===== */
+        .form-section {
+            margin-bottom: 60px;
+        }
+
+        .form-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            text-align: center;
+        }
+
+        .form-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #FFFFFF;
+        }
+
+        .form-card p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+        }
+
+        /* ===== INSTRUCCIÓN ===== */
+        .instruccion {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .instruccion i {
+            color: var(--accent);
+            margin-right: 5px;
+        }
+
+        /* ===== FORMULARIO WHATSAPP ===== */
+        .form-whatsapp {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .form-whatsapp input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #FFFFFF;
+            border-radius: 12px;
+            padding: 14px 20px;
+            font-size: 1rem;
+            width: 100%;
+            transition: all 0.3s;
+        }
+
+        .form-whatsapp input:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.2);
+        }
+
+        .form-whatsapp input::placeholder {
+            color: #64748B;
+        }
+
+        .btn-whatsapp-enviar {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+            padding: 14px 28px;
+            border-radius: 12px;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .btn-whatsapp-enviar:hover {
+            background: linear-gradient(135deg, #20ba5a, #0e7064);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* ===== BOTÓN DE DESCARGA ===== */
+        .btn-descargar {
+            background: linear-gradient(135deg, #10B981, #047857);
+            color: white;
+            font-weight: 800;
+            font-size: 1.1rem;
+            padding: 16px 45px;
+            border-radius: 50px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.4);
+            cursor: pointer;
+            margin-top: 20px;
+            border: none;
+        }
+
+        .btn-descargar:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(16, 185, 129, 0.5);
+            color: white;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            width: 100%;
+            background: rgba(10, 15, 29, 0.5);
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* Notificación flotante */
+        .toast-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 9999;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            pointer-events: none;
+        }
+
+        .toast-notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.2rem;
+            }
+            
+            .hero-desc {
+                font-size: 1.1rem;
+                padding: 0 10px;
+            }
+            
+            .features-list {
+                gap: 8px;
+            }
+            
+            .features-list li {
+                font-size: 0.9rem;
+                padding: 8px 14px;
+            }
+            
+            .btn-hero {
+                font-size: 1.05rem;
+                padding: 14px 35px;
+            }
+            
+            .btn-descargar {
+                font-size: 1rem;
+                padding: 14px 30px;
+            }
+            
+            .video-container iframe {
+                height: 280px;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-height: 600px) {
+            .hero-title {
+                font-size: 1.8rem;
+            }
+            
+            .hero-desc {
+                font-size: 0.95rem;
+                margin-bottom: 15px;
+            }
+            
+            .features-list {
+                margin-bottom: 15px;
+            }
+            
+            .btn-hero {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Fondo con cuadrícula y glow -->
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+
+<!-- NOTIFICACIÓN FLOTANTE -->
+<div id="toastNotification" class="toast-notification">
+    <i class="fas fa-check-circle"></i>
+    <span id="toastMessage">¡Acción realizada con éxito!</span>
+</div>
+
+<!-- CONTENEDOR PRINCIPAL -->
+<main class="landing-wrapper">
+    
+    <!-- HERO SECTION -->
+    <section class="hero-section">
+        <span class="badge-pill">
+            <i class="fas fa-star"></i> Herramienta Premium Gratis
+        </span>
+        
+        <h1 id="heroTitle" class="hero-title">Tus Datos y Contraseñas, Organizados y Seguros</h1>
+        
+        <p id="heroDesc" class="hero-desc">
+            Crea potentes archivos locales y privados protegidos con PIN. Sin bases de datos externas: toda tu información confidencial reside de forma cifrada bajo tu propio control.
+        </p>
+
+        <ul class="features-list">
+            <li><i class="fas fa-check"></i> Protección con PIN cifrado</li>
+            <li><i class="fas fa-check"></i> Enlaces y notas integradas</li>
+            <li><i class="fas fa-check"></i> Portable y seguro</li>
+        </ul>
+
+        <!-- Botón que baja al formulario -->
+        <a href="#formulario" id="botonHero" class="btn-hero">
+            <i class="fas fa-download"></i> Descargar Gratis
+        </a>
+    </section>
+
+    <!-- VIDEO SECTION -->
+    <section class="video-section">
+        <h2 class="section-title">Mira cómo funciona</h2>
+        <div class="video-container">
+            <!-- COLOCA AQUÍ EL ID DE TU VIDEO DE YOUTUBE -->
+            <iframe 
+                src="https://www.youtube.com/embed/LLb4cEL0qQ8" 
+                title="Video Tutorial Generador de Datos" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+            </iframe>
+        </div>
+    </section>
+
+    <!-- FORMULARIO SECTION -->
+    <section class="form-section" id="formulario">
+        <div class="form-card">
+            <h3>Recibe el Generador Gratis</h3>
+            <p>Completa el formulario y podrás descargar el archivo directamente.</p>
+
+            <!-- INSTRUCCIÓN PARA EL USUARIO -->
+            <div id="instruccion" class="instruccion">
+                <i class="fas fa-info-circle"></i>
+                Al enviar el mensaje por WhatsApp, <strong>regresa a esta página</strong> y el botón de descarga se activará automáticamente.
+            </div>
+
+            <!-- FORMULARIO WHATSAPP -->
+            <form id="formWhatsapp" class="form-whatsapp">
+                <input type="text" id="nombre" placeholder="Tu Nombre" required>
+                <input type="email" id="email" placeholder="Tu Correo Electrónico" required>
+                
+                <button type="submit" id="botonFormulario" class="btn-whatsapp-enviar">
+                    <i class="fab fa-whatsapp fa-lg"></i> Quiero recibir el archivo
+                </button>
+            </form>
+
+            <!-- BOTÓN DE DESCARGA (Oculto hasta que el usuario envíe el formulario) -->
+            <div id="downloadSection" style="display: none; margin-top: 20px;">
+                <a href="#" id="btnDescargar" class="btn-descargar" download>
+                    <i class="fas fa-download me-2"></i> Descargar Archivo
+                </a>
+            </div>
+            
+            <div style="text-align: center; margin-top: 15px;">
+                <span style="font-size: 0.75rem; color: var(--text-muted);">
+                    <i class="fas fa-lock me-1"></i> Tus datos nunca se comparten con terceros.
+                </span>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+    <p>© 2026 Generador de Datos. Todos los derechos reservados. · <a href="#">Privacidad</a> · <a href="#">Términos</a></p>
+</footer>
+
+<script>
+    // ============================================================
+    // CONFIGURACIÓN EDITABLE (JSON EMBEBIDO)
+    // ============================================================
+    const CONFIG = {
+        whatsappNumber: "521234567890", // Número de WhatsApp (sin +)
+        whatsappMessage: "Hola, quiero el Generador de Datos Gratis", // Mensaje predefinido
+        archivoDescarga: "generador.html", // URL del archivo que se descarga
+        heroTitle: "Tus Datos y Contraseñas, Organizados y Seguros", // Título principal
+        heroDescription: "Crea potentes archivos locales y privados protegidos con PIN. Sin bases de datos externas: toda tu información confidencial reside de forma cifrada bajo tu propio control.", // Descripción principal
+        botonHero: "Descargar Gratis", // Texto del botón principal
+        botonFormulario: "Quiero recibir el archivo", // Texto del botón del formulario
+        instruccion: "Al enviar el mensaje por WhatsApp, regresa a esta página y el botón de descarga se activará automáticamente."
+    };
+
+    // ============================================================
+    // APLICAR CONFIGURACIÓN A LA PÁGINA
+    // ============================================================
+    document.addEventListener('DOMContentLoaded', () => {
+        // Actualizar textos
+        document.getElementById('heroTitle').textContent = CONFIG.heroTitle;
+        document.getElementById('heroDesc').textContent = CONFIG.heroDescription;
+        document.getElementById('botonHero').innerHTML = `<i class="fas fa-download"></i> ${CONFIG.botonHero}`;
+        document.getElementById('botonFormulario').innerHTML = `<i class="fab fa-whatsapp fa-lg"></i> ${CONFIG.botonFormulario}`;
+        document.getElementById('instruccion').innerHTML = `<i class="fas fa-info-circle"></i> ${CONFIG.instruccion}`;
+        
+        // Actualizar URL de descarga
+        document.getElementById('btnDescargar').href = CONFIG.archivoDescarga;
+        
+        // Mostrar botón de descarga si el formulario fue enviado
+        if (localStorage.getItem('formEnviado') === 'true') {
+            document.getElementById('downloadSection').style.display = 'block';
+            document.getElementById('btnDescargar').href = CONFIG.archivoDescarga;
+        }
+    });
+
+    // ============================================================
+    // MANEJAR EL ENVÍO DEL FORMULARIO
+    // ============================================================
+    document.getElementById('formWhatsapp').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const nombre = document.getElementById('nombre').value.trim();
+        const email = document.getElementById('email').value.trim();
+        
+        if (!nombre || !email) {
+            alert('Por favor, completa todos los campos.');
+            return;
+        }
+        
+        // Construir mensaje para WhatsApp
+        const mensaje = `Hola, soy ${nombre}.\nMi correo es: ${email}.\n${CONFIG.whatsappMessage}`;
+        
+        // Abrir WhatsApp
+        const urlWhatsApp = `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(mensaje)}`;
+        window.open(urlWhatsApp, '_blank');
+        
+        // Guardar en localStorage que el formulario fue enviado
+        localStorage.setItem('formEnviado', 'true');
+        
+        // Mostrar el botón de descarga automáticamente
+        setTimeout(() => {
+            document.getElementById('downloadSection').style.display = 'block';
+            document.getElementById('btnDescargar').href = CONFIG.archivoDescarga;
+        }, 1000);
+        
+        // Mostrar notificación
+        mostrarNotificacion('✅ Abriendo WhatsApp... Cuando envíes el mensaje, podrás descargar el archivo.');
+    });
+
+    // ============================================================
+    // NOTIFICACIÓN FLOTANTE
+    // ============================================================
+    function mostrarNotificacion(mensaje) {
+        const toast = document.getElementById('toastNotification');
+        const msg = document.getElementById('toastMessage');
+        msg.textContent = mensaje;
+        toast.classList.add('show');
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3500);
+    }
+</script>
+
+</body>
+</html>
