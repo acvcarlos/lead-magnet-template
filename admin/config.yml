@@ -1,0 +1,24 @@
+backend:
+  name: github
+  repo: acvcarlos/lead-magnet-template # Asegúrate de que coincida con tu usuario y nombre de repositorio
+  branch: main
+
+media_folder: "img"
+public_folder: "/img"
+
+collections:
+  - name: "configuracion"
+  label: "Configuración del Lead Magnet"
+  files:
+    - file: "index.html"
+      label: "Textos y Configuración Principal"
+      name: "config"
+      fields:
+        - {label: "Número de WhatsApp", name: "whatsappNumber", widget: "string"}
+        - {label: "Mensaje de WhatsApp", name: "whatsappMessage", widget: "string"}
+        - {label: "Archivo de Descarga", name: "archivoDescarga", widget: "string"}
+        - {label: "Título Principal (Hero)", name: "heroTitle", widget: "string"}
+        - {label: "Descripción Principal", name: "heroDescription", widget: "text"}
+        - {label: "Texto Botón Hero", name: "botonHero", widget: "string"}
+        - {label: "Texto Botón Formulario", name: "botonFormulario", widget: "string"}
+        - {label: "Instrucción de WhatsApp", name: "instruccion", widget: "text"}
